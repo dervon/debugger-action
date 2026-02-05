@@ -40,13 +40,14 @@ jobs:
     #   uses: csexton/debugger-action@master
 
     - name: Checkout openwrt
-      run: git clone --depth 1 https://github.com/openwrt/openwrt.git
+      run: |
+        git clone --depth 1 https://github.com/openwrt/openwrt.git
+        git rev-parse HEAD
 
     - name: Feeds
       run: |
         cd openwrt
-        cp ../debugger-action/default.config .config
-        git rev-parse HEAD
+        cp ../default.config .config
         make defconfig
         ./scripts/feeds update -a
         ./scripts/feeds install -a
