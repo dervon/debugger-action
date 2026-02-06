@@ -44,11 +44,13 @@ jobs:
         git clone https://github.com/openwrt/openwrt.git
         cd openwrt
         git rev-parse HEAD
+        git checkout f750e3096f
 
     - name: Feeds
       run: |
         cd openwrt
         echo -e 'CONFIG_TARGET_qualcommax=y\nCONFIG_TARGET_qualcommax_ipq60xx=y\nCONFIG_SIGNED_PACKAGES=y\nCONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y' > .config
+        echo -e 'src-git packages https://git.openwrt.org/feed/packages.git^025c0c58b3b226b1d4b2a2c4cbc7e3f76d9dba9b\nsrc-git luci https://git.openwrt.org/project/luci.git^f0ff5612a1200803069fab48fa0521909e6a8e48\nsrc-git routing https://git.openwrt.org/feed/routing.git^bdf571c0ea5b9b029707787e0f89be7bbd3d75e3\nsrc-git telephony https://git.openwrt.org/feed/telephony.git^c5652e69f293620548b2276f5a8983f7c1589e48\nsrc-git video https://github.com/openwrt/video.git^094bf58da6682f895255a35a84349a79dab4bf95' > feeds.conf.default
         make defconfig
         ./scripts/feeds update -a
         ./scripts/feeds install -a
@@ -58,7 +60,7 @@ jobs:
         cd openwrt
         echo -e "$(($(nproc) + 4)) thread compile"
         export FORCE_UNSAFE_CONFIGURE=1
-        make -j$(($(nproc) + 4)) || make -j1 V=s
+        make -j$(($(nproc) + 4)) V=s || make -j1 V=s
         du -sh *
         du -sh ../openwrt
         echo "status=success" >> $GITHUB_OUTPUT 
