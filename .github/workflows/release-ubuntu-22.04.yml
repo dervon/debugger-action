@@ -42,6 +42,7 @@ jobs:
     - name: Checkout openwrt
       run: |
         git clone https://github.com/openwrt/openwrt.git
+        cd openwrt
         git rev-parse HEAD
 
     - name: Feeds
